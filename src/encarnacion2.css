@@ -262,7 +262,7 @@ body {
     font-size: clamp(15px, 1.5vw, 50px);
 }
 
-.button-container {
+.content-logout .button-container {
     display: flex;
     justify-content: flex-end;
     position: absolute;
@@ -283,7 +283,7 @@ body {
 }
 
 .cancel-btn {
-    background-color: #f5f5f5;
+    
     color: #333;
     border-color: 1px solid #564a4a;
 }
@@ -298,22 +298,6 @@ body {
     margin-right: 7%;
     margin-top: 3%;
     font-size: clamp(10px, 1.5vw, 25px);
-}
-
-.popup .content-generate{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform:translate(-50%, -50%) scale(0);
-    background: #fff;
-    width: 30%;
-    height: 50%;
-    z-index: 2;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
-    padding: 3%;
-    border-radius: 10px;
 }
 
 .popup .close-btn {
@@ -348,4 +332,68 @@ hr {
     margin-right: auto;
     border-style: inset;
     border-width: 1px;
+}
+
+.popup .input-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.input-container p {
+    font-size: clamp(10px, 2vw, 15px);
+    color: #007bff;
+    padding: 0 0 10px 0;
+}
+
+.copy-text {
+    position: relative;
+    background: #fff;
+    display: flex;
+    width: 100%;
+}
+
+.copy-text .input.text {
+    font-size: 18px;
+    color: #555;
+    border: none;
+    outline: none;
+}
+
+.copy-text .copy-btn {
+    padding: 10px;
+    background: grey;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.copy-text .copy-btn:hover {
+    background: darkgrey;
+}
+
+.copy-text .copy-btn svg {
+    fill: #fff;
+}
+
+.gen-btn {
+    background-color: #0066ff;
+    padding: 10px;
+    width: 100%;
+    margin: 8% 0 0 0;
+    display: absolute;
+    color: white;
+    border: 1px solid #0066ff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.gen-btn:hover {
+    background-color:#007bff;
+    border: 1px solid #007bff;
 }
