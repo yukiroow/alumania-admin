@@ -240,8 +240,10 @@ body {
 .name-container{
     display: flex; 
     align-items: center;
+    justify-content: space-between;
 }
-.shadow-square h1{
+
+.shadow-square h2{
     font-size: 16px;
     color:#343434;
 }
@@ -251,7 +253,7 @@ body {
     color:#343434;
 }
 
-.shadow-square h2{ 
+.shadow-square h3{ 
     margin: 30px 50px 0 60px;
     font-size: 18px;
     color:#343434;
@@ -265,7 +267,7 @@ body {
     justify-content: center;
 }
 
-.report-btn,.comment-btn {
+.report-btn, .comment-btn {
     display: flex; 
     align-items: center; 
     gap: 5px; 
@@ -277,6 +279,7 @@ body {
     justify-content: center;
     cursor: pointer;
 }
+
 .report-btn{
     background-color: #CE3D3D;
 }
@@ -291,4 +294,143 @@ body {
 
 .comment-btn:hover{
     background-color: #0040a0;
+}
+
+.popup .overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(133, 177, 190, 0.7);
+    z-index: 1;
+    display: none;
+}
+
+.popup .content-reports, .popup .content-comment {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #fff;
+    width: 40%;
+    height: 60%;
+    z-index: 2;
+    box-sizing: border-box;
+    padding: 1%;
+    border-radius: 10px;
+    transition: transform 300ms ease-in-out; /*fancy thingz*/
+    max-height: 100vh; /* Set a maximum height for the popup */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+}
+
+.popup.active .overlay {
+    display: block;
+}
+
+.popup.active .content-reports, .popup.active .content-comment {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.content-reports h1, .content-comment h1 {
+    color: #343434;
+    justify-content: center;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 2%;
+    margin-top: 10px;
+}
+
+.popup .close-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    color: #564a4a;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 30px;
+    text-align: center;
+}
+
+#popup-reports.active .overlay,
+#popup-comment.active .overlay {
+    display: block;
+}
+
+#popup-reports.active .content-reports,
+#popup-comment.active .content-comment {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+hr {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+}
+
+/* For reports */
+.name-container-popup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.name-container-popup img {
+    margin-right: 10px;
+}
+
+.name-container-popup h2 {
+    margin: 0;
+    margin-right: auto; 
+    font-size: 15px;
+}
+
+.name-container-popup p {
+    margin: 0;
+    font-size: smaller;
+}
+
+/* For comments */
+.name-container h2 {
+    font-size: 16px;
+    color:#343434;
+}
+
+.name-container p {
+    font-size: 0.9em;
+    color:#343434;
+}
+
+.name-container div {
+    flex-grow: 1; /* Makes the text container expand to fill available space */
+}
+
+.name-container .icon {
+    margin-right: 10px; /* Optional spacing between the text and SVG */
+    cursor: pointer;
+}
+
+/* Scrollbar */
+#style-2::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #555;
 }
