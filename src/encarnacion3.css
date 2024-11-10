@@ -320,8 +320,8 @@ body {
     padding: 1%;
     border-radius: 10px;
     transition: transform 300ms ease-in-out; /*fancy thingz*/
-    max-height: 100vh; /* Set a maximum height for the popup */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    max-height: 100vh; 
+    overflow-y: auto; 
 }
 
 .popup.active .overlay {
@@ -409,11 +409,11 @@ hr {
 }
 
 .name-container div {
-    flex-grow: 1; /* Makes the text container expand to fill available space */
+    flex-grow: 1; 
 }
 
 .name-container .icon {
-    margin-right: 10px; /* Optional spacing between the text and SVG */
+    margin-right: 10px; 
     cursor: pointer;
 }
 
