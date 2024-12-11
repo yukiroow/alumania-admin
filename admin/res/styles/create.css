@@ -202,18 +202,7 @@ body {
   outline: none;
 }
 
-.description-input {
-  height: 30vh;
-  width: 100%;
-  resize: none;
-  padding-top: 10px;
-  padding-left: 10px;
-  box-sizing: border-box;
-  border: 1px solid #666666;
-  outline: none;
-  border-radius: 5px;
-}
-.description-input-event {
+.description-input{
   height: 20vh;
   width: 100%;
   resize: none;

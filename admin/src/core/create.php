@@ -60,7 +60,7 @@ if(isset($_SESSION['username'])) { ?>
                         <div class="input-container">
                             <label for="description" class="text">Description</label>
                             <textarea placeholder="Insert description here" name="description"
-                                class="input description-input-event" rows="4"></textarea>
+                                class="input description-input" rows="4"></textarea>
                         </div>
                         
 
