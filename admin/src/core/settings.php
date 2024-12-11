@@ -57,7 +57,7 @@ if (isset($_POST['logout'])) {
             <div class="popup" id="popup-generate">
                 <div class="overlay" onclick="togglePopup('popup-generate')"></div>
                 <div class="content-generate" onclick="event.stopPropagation()">
-                    <div class="close-btn" onclick="togglePopup('popup-generate')">&times;</div>
+                    <div class="close-btn" onclick="closeAndClearInput()">&times;</div>
                     <h1>Generate new admin key</h1>
                     <hr>
                     <div class="input-container">

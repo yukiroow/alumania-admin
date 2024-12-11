@@ -230,6 +230,7 @@
     color: #CCCCCC;
 }
 
+.closePopupBtn,
 .closePopup {
     background-color: #ff4d4d;
     color: white;
@@ -240,6 +241,7 @@
     border-radius: 8px;
 }
 
+.closePopupBtn:hover,
 .closePopup:hover {
     background-color: #e60000;
 }
@@ -343,6 +345,7 @@
 }
 
 /* Close button styling */
+.closePopupBtn,
 .closePopup {
     background: transparent;
     border: none;
@@ -352,6 +355,7 @@
     transition: color 0.3s ease;
 }
 
+.closePopupBtn,
 .closePopup:hover {
     color: #89CFF0;
 }

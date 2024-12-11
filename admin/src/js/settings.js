@@ -30,6 +30,13 @@ function togglePopup(popupId) {
     document.getElementById(popupId).classList.toggle("active");
 }
 
+function closeAndClearInput() {
+    // Clear the input field
+    document.getElementById('generatedKey').value = '';
+    // Close the popup
+    togglePopup('popup-generate');
+}
+
 
 // COPY GENERATED ADMIN KEY
 function copyToClipboard() {

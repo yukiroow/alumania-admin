@@ -254,7 +254,7 @@ if (isset($_SESSION['username'])) { ?>
                             <div class="event-location">${eventsData[i].eventloc}</div>
                             <div class="event-interest-count">
                                 <button class="view-interested-button" onclick="getInterestedUser('${eventsData[i].eventid}', 'event')">Interested</button>
-                                <button class="sponsors-button" onclick=" " , 'event')">Sponsors</button>
+                                <button class="sponsors-button" onclick="showEventSponsors('${eventsData[i].eventid}')" , 'event')">Sponsors</button>
                                 <button class="delete-button" onclick="deletePost('${eventsData[i].eventid}', 'event')">
                                     <img src="../../res/delete.png" alt="Delete Icon" class="delete-button-icon">
                                 </button>
@@ -388,7 +388,55 @@ if (isset($_SESSION['username'])) { ?>
                 }
             }
 
+            function showEventSponsors(eventid) {
+                fetch(`getEventSponsors.php?eventid=${eventid}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            alert("No sponsors for this event.");
+                            return;
+                        }
 
+                        // Create popup content
+                        let popupContent = `<div class="popup">
+                            <div class="popup-header">
+                                <h3>Sponsors for ${data[0].title}</h3>
+                                <button class="closePopupBtn" onclick="closeEventPopup()">X</button>
+                            </div>
+                            <div class="popup-body">
+                                <ul>`;
+                        
+                        data.forEach(sponsor => {
+                            popupContent += `<li>
+                                <span><strong>Name:</strong> ${sponsor.name}</span><br>
+                                <span><strong>Type:</strong> ${sponsor.type}</span><br>
+                                <span><strong>Amount:</strong> ${sponsor.amount}</span>
+                            </li><hr>`;
+                        });
+
+                        popupContent += `</ul></div></div>`;
+
+                        // Append popup to the body and display the overlay
+                        const popupContainer = document.createElement('div');
+                        popupContainer.id = "eventPopup";
+                        popupContainer.classList.add("active");
+                        popupContainer.innerHTML = popupContent;
+                        document.body.appendChild(popupContainer);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching event sponsors:", error);
+                        alert("Failed to fetch event sponsors.");
+                    });
+            }
+
+            // Function to close the popup
+            function closeEventPopup() {
+                const popup = document.getElementById("eventPopup");
+                if (popup) {
+                    popup.classList.remove("active");
+                    setTimeout(() => popup.remove(), 300);
+                }
+            }
 
             function deletePost(id, type) {
                 if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
