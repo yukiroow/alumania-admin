@@ -403,3 +403,36 @@
     color: #333;
 }
 
+.sponsor-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 20px;
+}
+
+.sponsor-table th, .sponsor-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #f7f7f700;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(133, 177, 190, 0.7); 
+    z-index: 999; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none; /* Hide overlay initially */
+    opacity: 0; 
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+    display: block;
+    opacity: 1;
+}
+

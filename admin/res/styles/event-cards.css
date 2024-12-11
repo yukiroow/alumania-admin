@@ -138,28 +138,3 @@
     margin-right: 10px;
     vertical-align: middle;
 }
-
-.sponsor-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.sponsor-table th, .sponsor-table td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ddd;
-    margin-left: 25px;
-}
-
-.sponsor-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-.sponsor-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.sponsor-table tr:hover {
-    background-color: #f1f1f1;
-}

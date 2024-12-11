@@ -397,6 +397,10 @@ if (isset($_SESSION['username'])) { ?>
                             return;
                         }
 
+                        const overlay = document.createElement('div');
+                        overlay.id = "overlay";
+                        overlay.classList.add("overlay");
+
                         // Create popup content
                         let popupContent = `<div class="popup">
                             <div class="popup-header">
@@ -430,6 +434,7 @@ if (isset($_SESSION['username'])) { ?>
                         popupContainer.id = "eventPopup";
                         popupContainer.classList.add("active");
                         popupContainer.innerHTML = popupContent;
+                        document.body.appendChild(overlay);
                         document.body.appendChild(popupContainer);
                     })
                     .catch(error => {
@@ -441,9 +446,14 @@ if (isset($_SESSION['username'])) { ?>
             // Function to close the popup
             function closeEventPopup() {
                 const popup = document.getElementById("eventPopup");
-                if (popup) {
+                const overlay = document.getElementById("overlay");
+                if (popup && overlay) {
                     popup.classList.remove("active");
-                    setTimeout(() => popup.remove(), 300);
+                    overlay.classList.remove("active");
+                    setTimeout(() => {
+                        popup.remove();
+                        overlay.remove();
+                    }, 300);
                 }
             }
 
