@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
     require_once '..\database\database.php';
 
     $db = Database::getInstance();
     $conn = $db->getConnection();
 
-    $sqlAlumni = "SELECT userid, email, firstname, middlename, lastname, empstatus, location FROM alumni";
+    $sqlAlumni = "SELECT * FROM alumni";
     $resultAlumni = $conn->query($sqlAlumni);
 
     $sqlManagers = "
@@ -91,26 +91,50 @@ if (isset($_SESSION['username'])) {
                     <h2>Add New Manager</h2>
                     <form id="addManagerForm">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username">
 
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password">
                     <button id="togglePassword" type="button">Show Password</button> 
                     <button type="submit" class="submit-button">Add Manager</button>
                     </form>
                 </div>
             </div>
 
+            <div id="editManagerModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h2>Edit Manager</h2>
+                    <form id="editManagerForm">
+                        <input type="hidden" id="editManagerId" name="manager_id">
+                        <label for="editUsername">Username:</label>
+                        <input type="text" id="editUsername" name="username">
 
+                        <label for="editPassword">Password:</label>
+                        <input type="password" id="editPassword" name="password">
+                        <button id="togglePassword1" type="button">Show Password</button>
+                        <button type="submit" class="submit-button">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="deleteManagerModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h2>Confirm Delete</h2>
+                    <p>Are you sure you want to delete the manager <strong id="deleteManagerName"></strong>?</p>
+                    <button id="confirmDeleteManager" class="submit-button">Yes, Delete</button>
+                </div>
+            </div>
 
             <div class="user-panel" id="userPanel">
                 
             </div>
         </div>
 
-        <div class="user-panel" id="userPanel">
-            <div id="userDetails" class="hidden">
-                <button id="goBackButton">Go Back</button>
+        <div class="modal hidden" id="userModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeModal">&times;</span>
                 <div id="userInfo"></div>
             </div>
         </div>
@@ -129,26 +153,30 @@ if (isset($_SESSION['username'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
+                        <?php 
                             if ($resultAlumni && $resultAlumni->num_rows > 0) {
                                 while ($row = $resultAlumni->fetch_assoc()) { 
                                     $userData = json_encode([
-                                        "name" => $row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname'],
+                                        "userid" => $row['userid'],
                                         "email" => $row['email'],
+                                        "name" => $row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname'],
                                         "empstatus" => $row['empstatus'],
-                                        "location" => $row['location']
+                                        "location" => $row['location'],
+                                        "displaypic" => base64_encode($row['displaypic']),
+                                        "course" => $row['course'],    // Ensure course field exists
+                                        "company" => $row['company']   // Ensure company field exists
                                     ]);
                             ?>
-                                <tr data-user-data='<?php echo htmlspecialchars($userData); ?>'>
-                                    <td data-label="User ID"><?php echo htmlspecialchars($row['userid']); ?></td>
-                                    <td data-label="Email"><?php echo htmlspecialchars($row['email']); ?></td>
-                                    <td data-label="Name"><?php echo htmlspecialchars($row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname']); ?></td>
-                                    <td data-label="Employment Status"><?php echo htmlspecialchars($row['empstatus']); ?></td>
-                                    <td data-label="Location"><?php echo htmlspecialchars($row['location']); ?></td>
-                                </tr>
-                                <?php }
+                                    <tr data-user-data='<?php echo htmlspecialchars($userData); ?>'>
+                                        <td data-label="User ID"><?php echo htmlspecialchars($row['userid']); ?></td>
+                                        <td data-label="Email"><?php echo htmlspecialchars($row['email']); ?></td>
+                                        <td data-label="Name"><?php echo htmlspecialchars($row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname']); ?></td>
+                                        <td data-label="Employment Status"><?php echo htmlspecialchars($row['empstatus']); ?></td>
+                                        <td data-label="Location"><?php echo htmlspecialchars($row['location']); ?></td>
+                                    </tr>
+                            <?php }
                             } else { ?>
-                                <tr>
+                                <tr> 
                                     <td colspan="5">No alumni found</td>
                                 </tr>
                             <?php } ?>
@@ -169,14 +197,20 @@ if (isset($_SESSION['username'])) {
                         <tbody>
                             <?php 
                             if ($resultManagers && $resultManagers->num_rows > 0) {
-                                while ($row = $resultManagers->fetch_assoc()) { ?>
-                                    <tr>
-                                        <td data-label="Username"><?php echo htmlspecialchars($row['username']); ?></td>
-                                        <td data-label="Actions">
-                                            <!-- Add any action buttons if needed -->
-                                        </td>
-                                    </tr>
-                                <?php }
+                                while ($row = $resultManagers->fetch_assoc()) { 
+                                    $managerData = json_encode([
+                                        "username" => $row['username'],
+                                        "password" => $row['password']
+                                    ]);
+                            ?>
+                                <tr data-manager-data='<?php echo htmlspecialchars($managerData); ?>'>
+                                    <td data-label="Username"><?php echo htmlspecialchars($row['username']); ?></td>
+                                    <td data-label="Actions">
+                                        <button class="edit-manager-btn" onclick='openEditModal(<?php echo htmlspecialchars($managerData); ?>)'>Edit</button>
+                                        <button class="delete-manager-btn" onclick='openDeleteModal("<?php echo htmlspecialchars($row['username']); ?>")'>Delete</button>
+                                    </td>
+                                </tr>
+                            <?php }
                             } else { ?>
                                 <tr>
                                     <td colspan="3">No managers found</td>
@@ -187,73 +221,100 @@ if (isset($_SESSION['username'])) {
                 </div>
             `;
 
-
             document.addEventListener('DOMContentLoaded', () => {
-            const alumniTab = document.getElementById('alumniTab');
-            const managerTab = document.getElementById('managerTab');
-            const userPanel = document.getElementById('userPanel');
-            const addManagerButtonContainer = document.querySelector('.add-manager-button-container');
-            const filterButtonContainer = document.getElementById('filterButtonContainer');
-            const searchInput = document.querySelector('.search-input');
-            function updateTabState(activeTab, inactiveTab, content, showFilter, placeholder) {
-                userPanel.innerHTML = content; 
-                activeTab.classList.add('active'); 
-                inactiveTab.classList.remove('active'); 
-                addManagerButtonContainer.classList.toggle('hidden', showFilter); 
-                filterButtonContainer.style.display = showFilter ? "block" : "none"; 
-                if (searchInput) {
-                    searchInput.placeholder = placeholder; 
-                }
-            }
+                // Variables for modals
+                const editManagerModal = document.getElementById("editManagerModal");
+                const deleteManagerModal = document.getElementById("deleteManagerModal");
+                const editManagerForm = document.getElementById("editManagerForm");
+                const deleteManagerConfirmBtn = document.getElementById("confirmDeleteManager");
 
-            updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
+                let currentManagerUsername = null;
 
-            alumniTab.addEventListener('click', () => {
-                updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
-            });
-
-            managerTab.addEventListener('click', () => {
-                updateTabState(managerTab, alumniTab, managerContent, false, "Username");
-            });
-        });
-
-        function showUserDetails(userData) {
-        userInfo.innerHTML = `
-            <h2>User Details</h2>
-            <p><strong>ID:</strong> ${userData.id}</p>
-            <p><strong>Name:</strong> ${userData.name}</p>
-            <p><strong>Email:</strong> ${userData.email}</p>
-            <p><strong>Status:</strong> ${userData.status}</p>
-            <p><strong>Location:</strong> ${userData.location}</p>
-        `;
-
-        userPanel.classList.add("hidden");
-        userDetails.classList.remove("hidden");
-        }
-
-        goBackButton.addEventListener("click", () => {
-            userDetails.classList.add("hidden");
-            userPanel.classList.remove("hidden");
-        });
-
-        document.querySelector("tbody").addEventListener("click", (event) => {
-            const row = event.target.closest("tr");
-            if (row) {
-                const userData = {
-                    id: row.cells[0].textContent,
-                    email: row.cells[1].textContent,
-                    name: row.cells[2].textContent,
-                    status: row.cells[3].textContent,
-                    location: row.cells[4].textContent,
+                window.openEditModal = function (managerData) {
+                    document.getElementById("editUsername").value = managerData.username;
+                    document.getElementById("editPassword").value = managerData.password;
+                    currentManagerUsername = managerData.username; // Displayed for confirmation
+                    editManagerModal.style.display = "block";
                 };
 
-                showUserDetails(userData);
-            }
-        });
+                editManagerForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    // Validate form fields
+                    const username = editManagerForm.elements["username"].value.trim();
+                    const password = editManagerForm.elements["password"].value.trim();
+
+                    if (!username || !password) {
+                        alert("All fields are required.");
+                    }
+
+                    if (password.length < 4) {
+                        alert("Password must be at least 4 characters long.");
+                        return;
+                    }
+
+                    const formData = new FormData(editManagerForm);
+                    formData.append("currentUsername", currentManagerUsername); 
+
+                    fetch("edit_manager.php", {
+                        method: "POST",
+                        body: formData,
+                    })
+                    .then((response) => response.text())
+                    .then((data) => {
+                        alert(data);  
+                        location.reload();
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred while updating the manager.");
+                    });
+
+                    editManagerModal.style.display = "none"; 
+                });
+
+
+                window.openDeleteModal = function (username) {
+                    currentManagerUsername = username;
+                    document.getElementById("deleteManagerName").textContent = username;
+                    deleteManagerModal.style.display = "block";
+                };
+
+                deleteManagerConfirmBtn.addEventListener("click", () => {
+                    fetch("delete_manager.php", {
+                        method: "POST",
+                        body: new URLSearchParams({
+                            username: currentManagerUsername
+                        }),
+                    })
+                        .then((response) => response.text())
+                        .then((data) => {
+                            alert(data);  // Assuming the server returns a success message
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("An error occurred while deleting the manager.");
+                        });
+
+                    deleteManagerModal.style.display = "none";
+                });
+
+
+                // Close modals
+                document.querySelectorAll(".close-btn").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        editManagerModal.style.display = "none";
+                        deleteManagerModal.style.display = "none";
+                    });
+                });
+            });     
         </script>
 
         <script src="../js/users.js" defer></script>
-        <script src="../js/contentmove.js"></script>
     </body>
 </html>
+<?php } else { ?>
+    <h1 style='margin:auto;'>Access Forbidden</h1>
+    <p>Please log in to your proper account.</p>
 <?php } ?>
