@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
+if (isset($_SESSION['username'])) {
     require_once '..\database\database.php';
 
     $db = Database::getInstance();
     $conn = $db->getConnection();
 
-    $sqlAlumni = "SELECT * FROM alumni";
+    $sqlAlumni = "SELECT userid, email, firstname, middlename, lastname, empstatus, location FROM alumni";
     $resultAlumni = $conn->query($sqlAlumni);
 
     $sqlManagers = "
@@ -19,6 +19,7 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
     ";
     $resultManagers = $conn->query($sqlManagers);
 ?>
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +30,9 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
     <body>
         <div id="notificationContainer"></div>
         <?php include 'navbar.php'; ?>
-        <script defer> setActiveNav("userstab", "usersicon", 3); </script>
+        <script defer>
+            setActiveNav("userstab", "usersicon", 3);
+        </script>
 
         <div class="content-container">
             <div class="header">
@@ -51,90 +54,66 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
             </div>
             <div class="searchfilter">
                 <div class="total-users">Total Users: </div>
-                    <div class="search-box">
-                        <input type="text" class="search-input">
-                        <img src="../../res/search.png" class="search-icon" alt="Search">
-                        <div id="filterButtonContainer">
+                <div class="search-box">
+                    <input type="text" class="search-input">
+                    <img src="../../res/search.png" class="search-icon" alt="Search">
+                    <div id="filterButtonContainer">
                         <button class="filter-btn" onclick="toggleFilterDropdown()">
                             <img src="../../res/sort.png" class="filter-icon" alt="Filter">
                         </button>
-                        </div>
-                        <div class="filter-dropdown" id="filterDropdown">
-                            <h3>Search Filters</h3>
-                            <div class="filter-content">
-                                <div class="filter-section">
-                                    <h4>Status</h4>
-                                    <ul>
-                                        <li>Employed</li>
-                                        <li>Unemployed</li>
-                                        <li>Underemployed</li>
-                                    </ul>
-                                </div>
-                                <div class="filter-section">
-                                    <h4>Location</h4>
-                                    <ul>
-                                        <li>Domestic</li>
-                                        <li>Foreign</li>
-                                    </ul>
-                                </div>
+                    </div>
+                    <div class="filter-dropdown" id="filterDropdown">
+                        <h3>Search Filters</h3>
+                        <div class="filter-content">
+                            <div class="filter-section">
+                                <h4>Status</h4>
+                                <ul>
+                                    <li>Employed</li>
+                                    <li>Unemployed</li>
+                                    <li>Underemployed</li>
+                                </ul>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Location</h4>
+                                <ul>
+                                    <li>Domestic</li>
+                                    <li>Foreign</li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="add-manager-button-container hidden">
-                            <button class="add-manager-button">
-                            <img src="../../res/add.png" alt="Add Icon" class="add-manager-icon"/>Add Manager</button>
-                        </div>
                     </div>
+                    <div class="add-manager-button-container hidden">
+                        <button class="add-manager-button">
+                            <img src="../../res/add.png" alt="Add Icon" class="add-manager-icon" />Add Manager</button>
+                    </div>
+                </div>
             </div>
             <div id="addManagerModal" class="modal hidden">
                 <div class="modal-content">
                     <span class="close-btn">&times;</span>
                     <h2>Add New Manager</h2>
                     <form id="addManagerForm">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
 
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password">
-                    <button id="togglePassword" type="button">Show Password</button> 
-                    <button type="submit" class="submit-button">Add Manager</button>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                        <button id="togglePassword" type="button">Show Password</button>
+                        <button type="submit" class="submit-button">Add Manager</button>
                     </form>
                 </div>
             </div>
 
-            <div id="editManagerModal" class="modal hidden">
-                <div class="modal-content">
-                    <span class="close-btn">&times;</span>
-                    <h2>Edit Manager</h2>
-                    <form id="editManagerForm">
-                        <input type="hidden" id="editManagerId" name="manager_id">
-                        <label for="editUsername">Username:</label>
-                        <input type="text" id="editUsername" name="username">
 
-                        <label for="editPassword">Password:</label>
-                        <input type="password" id="editPassword" name="password">
-                        <button id="togglePassword1" type="button">Show Password</button>
-                        <button type="submit" class="submit-button">Save Changes</button>
-                    </form>
-                </div>
-            </div>
-
-            <div id="deleteManagerModal" class="modal hidden">
-                <div class="modal-content">
-                    <span class="close-btn">&times;</span>
-                    <h2>Confirm Delete</h2>
-                    <p>Are you sure you want to delete the manager <strong id="deleteManagerName"></strong>?</p>
-                    <button id="confirmDeleteManager" class="submit-button">Yes, Delete</button>
-                </div>
-            </div>
 
             <div class="user-panel" id="userPanel">
-                
+
             </div>
         </div>
 
-        <div class="modal hidden" id="userModal">
-            <div class="modal-content">
-                <span class="close-btn" id="closeModal">&times;</span>
+        <div class="user-panel" id="userPanel">
+            <div id="userDetails" class="hidden">
+                <button id="goBackButton">Go Back</button>
                 <div id="userInfo"></div>
             </div>
         </div>
@@ -153,30 +132,26 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
                             </tr>
                         </thead>
                         <tbody>
-                        <?php 
+                            <?php
                             if ($resultAlumni && $resultAlumni->num_rows > 0) {
-                                while ($row = $resultAlumni->fetch_assoc()) { 
+                                while ($row = $resultAlumni->fetch_assoc()) {
                                     $userData = json_encode([
-                                        "userid" => $row['userid'],
-                                        "email" => $row['email'],
                                         "name" => $row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname'],
+                                        "email" => $row['email'],
                                         "empstatus" => $row['empstatus'],
-                                        "location" => $row['location'],
-                                        "displaypic" => base64_encode($row['displaypic']),
-                                        "course" => $row['course'],    // Ensure course field exists
-                                        "company" => $row['company']   // Ensure company field exists
+                                        "location" => $row['location']
                                     ]);
                             ?>
-                                    <tr data-user-data='<?php echo htmlspecialchars($userData); ?>'>
-                                        <td data-label="User ID"><?php echo htmlspecialchars($row['userid']); ?></td>
-                                        <td data-label="Email"><?php echo htmlspecialchars($row['email']); ?></td>
-                                        <td data-label="Name"><?php echo htmlspecialchars($row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname']); ?></td>
-                                        <td data-label="Employment Status"><?php echo htmlspecialchars($row['empstatus']); ?></td>
-                                        <td data-label="Location"><?php echo htmlspecialchars($row['location']); ?></td>
-                                    </tr>
-                            <?php }
+                                <tr data-user-data='<?php echo htmlspecialchars($userData); ?>'>
+                                    <td data-label="User ID"><?php echo htmlspecialchars($row['userid']); ?></td>
+                                    <td data-label="Email"><?php echo htmlspecialchars($row['email']); ?></td>
+                                    <td data-label="Name"><?php echo htmlspecialchars($row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname']); ?></td>
+                                    <td data-label="Employment Status"><?php echo htmlspecialchars($row['empstatus']); ?></td>
+                                    <td data-label="Location"><?php echo htmlspecialchars($row['location']); ?></td>
+                                </tr>
+                                <?php }
                             } else { ?>
-                                <tr> 
+                                <tr>
                                     <td colspan="5">No alumni found</td>
                                 </tr>
                             <?php } ?>
@@ -195,22 +170,16 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
+                            <?php
                             if ($resultManagers && $resultManagers->num_rows > 0) {
-                                while ($row = $resultManagers->fetch_assoc()) { 
-                                    $managerData = json_encode([
-                                        "username" => $row['username'],
-                                        "password" => $row['password']
-                                    ]);
-                            ?>
-                                <tr data-manager-data='<?php echo htmlspecialchars($managerData); ?>'>
-                                    <td data-label="Username"><?php echo htmlspecialchars($row['username']); ?></td>
-                                    <td data-label="Actions">
-                                        <button class="edit-manager-btn" onclick='openEditModal(<?php echo htmlspecialchars($managerData); ?>)'>Edit</button>
-                                        <button class="delete-manager-btn" onclick='openDeleteModal("<?php echo htmlspecialchars($row['username']); ?>")'>Delete</button>
-                                    </td>
-                                </tr>
-                            <?php }
+                                while ($row = $resultManagers->fetch_assoc()) { ?>
+                                    <tr>
+                                        <td data-label="Username"><?php echo htmlspecialchars($row['username']); ?></td>
+                                        <td data-label="Actions">
+                                            <!-- Add any action buttons if needed -->
+                                        </td>
+                                    </tr>
+                                <?php }
                             } else { ?>
                                 <tr>
                                     <td colspan="3">No managers found</td>
@@ -221,100 +190,75 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
                 </div>
             `;
 
+
             document.addEventListener('DOMContentLoaded', () => {
-                // Variables for modals
-                const editManagerModal = document.getElementById("editManagerModal");
-                const deleteManagerModal = document.getElementById("deleteManagerModal");
-                const editManagerForm = document.getElementById("editManagerForm");
-                const deleteManagerConfirmBtn = document.getElementById("confirmDeleteManager");
+                const alumniTab = document.getElementById('alumniTab');
+                const managerTab = document.getElementById('managerTab');
+                const userPanel = document.getElementById('userPanel');
+                const addManagerButtonContainer = document.querySelector('.add-manager-button-container');
+                const filterButtonContainer = document.getElementById('filterButtonContainer');
+                const searchInput = document.querySelector('.search-input');
 
-                let currentManagerUsername = null;
-
-                window.openEditModal = function (managerData) {
-                    document.getElementById("editUsername").value = managerData.username;
-                    document.getElementById("editPassword").value = managerData.password;
-                    currentManagerUsername = managerData.username; // Displayed for confirmation
-                    editManagerModal.style.display = "block";
-                };
-
-                editManagerForm.addEventListener("submit", (e) => {
-                    e.preventDefault();
-
-                    // Validate form fields
-                    const username = editManagerForm.elements["username"].value.trim();
-                    const password = editManagerForm.elements["password"].value.trim();
-
-                    if (!username || !password) {
-                        alert("All fields are required.");
+                function updateTabState(activeTab, inactiveTab, content, showFilter, placeholder) {
+                    userPanel.innerHTML = content;
+                    activeTab.classList.add('active');
+                    inactiveTab.classList.remove('active');
+                    addManagerButtonContainer.classList.toggle('hidden', showFilter);
+                    filterButtonContainer.style.display = showFilter ? "block" : "none";
+                    if (searchInput) {
+                        searchInput.placeholder = placeholder;
                     }
+                }
 
-                    if (password.length < 4) {
-                        alert("Password must be at least 4 characters long.");
-                        return;
-                    }
+                updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
 
-                    const formData = new FormData(editManagerForm);
-                    formData.append("currentUsername", currentManagerUsername); 
-
-                    fetch("edit_manager.php", {
-                        method: "POST",
-                        body: formData,
-                    })
-                    .then((response) => response.text())
-                    .then((data) => {
-                        alert(data);  
-                        location.reload();
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("An error occurred while updating the manager.");
-                    });
-
-                    editManagerModal.style.display = "none"; 
+                alumniTab.addEventListener('click', () => {
+                    updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
                 });
 
-
-                window.openDeleteModal = function (username) {
-                    currentManagerUsername = username;
-                    document.getElementById("deleteManagerName").textContent = username;
-                    deleteManagerModal.style.display = "block";
-                };
-
-                deleteManagerConfirmBtn.addEventListener("click", () => {
-                    fetch("delete_manager.php", {
-                        method: "POST",
-                        body: new URLSearchParams({
-                            username: currentManagerUsername
-                        }),
-                    })
-                        .then((response) => response.text())
-                        .then((data) => {
-                            alert(data);  // Assuming the server returns a success message
-                            location.reload();
-                        })
-                        .catch((error) => {
-                            console.error("Error:", error);
-                            alert("An error occurred while deleting the manager.");
-                        });
-
-                    deleteManagerModal.style.display = "none";
+                managerTab.addEventListener('click', () => {
+                    updateTabState(managerTab, alumniTab, managerContent, false, "Username");
                 });
+            });
 
+            function showUserDetails(userData) {
+                userInfo.innerHTML = `
+            <h2>User Details</h2>
+            <p><strong>ID:</strong> ${userData.id}</p>
+            <p><strong>Name:</strong> ${userData.name}</p>
+            <p><strong>Email:</strong> ${userData.email}</p>
+            <p><strong>Status:</strong> ${userData.status}</p>
+            <p><strong>Location:</strong> ${userData.location}</p>
+        `;
 
-                // Close modals
-                document.querySelectorAll(".close-btn").forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        editManagerModal.style.display = "none";
-                        deleteManagerModal.style.display = "none";
-                    });
-                });
-            });     
+                userPanel.classList.add("hidden");
+                userDetails.classList.remove("hidden");
+            }
+
+            goBackButton.addEventListener("click", () => {
+                userDetails.classList.add("hidden");
+                userPanel.classList.remove("hidden");
+            });
+
+            document.querySelector("tbody").addEventListener("click", (event) => {
+                const row = event.target.closest("tr");
+                if (row) {
+                    const userData = {
+                        id: row.cells[0].textContent,
+                        email: row.cells[1].textContent,
+                        name: row.cells[2].textContent,
+                        status: row.cells[3].textContent,
+                        location: row.cells[4].textContent,
+                    };
+
+                    showUserDetails(userData);
+                }
+            });
         </script>
 
         <script src="../js/users.js" defer></script>
+        <script src="../js/contentmove.js"></script>
     </body>
-</html>
-<?php } else { ?>
-    <h1 style='margin:auto;'>Access Forbidden</h1>
-    <p>Please log in to your proper account.</p>
+
+    </html>
 <?php } ?>
