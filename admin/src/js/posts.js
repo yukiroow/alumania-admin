@@ -202,3 +202,16 @@ function eventCategory() {
 function sortCategory() {
   document.getElementById("sortDropdown").classList.toggle("show");
 }
+
+document.addEventListener("click", function (event) {
+  if (
+    !event.target.matches(
+      ".sort-button, .sort-content *, .event-category-button, .event-dropdown-content *"
+    )
+  ) {
+    const sortDropdown = document.getElementById("sortDropdown");
+    const categoryDropdown = document.getElementById("categoryDropdown");
+    sortDropdown.classList.remove("show");
+    categoryDropdown.classList.remove("show");
+  }
+});
