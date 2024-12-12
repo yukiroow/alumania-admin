@@ -443,6 +443,8 @@ if (isset($_SESSION['username'])) { ?>
         });
 
 
+
+
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
 

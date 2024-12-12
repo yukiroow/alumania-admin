@@ -12,43 +12,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $db = Database::getInstance();
     $conn = $db->getConnection();
-
-    // Check if username already exists
-    $sqlCheckUsername = "SELECT * FROM user WHERE username = ?";
-    $stmt = $conn->prepare($sqlCheckUsername);
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sqlGetMaxId = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1;";
+    $result = $conn->query($sqlGetMaxId);
 
     if ($result && $result->num_rows > 0) {
-        echo json_encode(['success' => false, 'message' => 'A user with this username already exists.']);
+        $row = $result->fetch_assoc();
+        $lastUserId = $row['userId'];
+        $newUserId = sprintf("U%03d", substr($lastUserId, 1) + 1); 
     } else {
-        // Proceed with adding the manager
-        $sqlGetMaxId = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1;";
-        $result = $conn->query($sqlGetMaxId);
+        $newUserId = 'U001'; 
+    }
 
-        if ($result && $result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $lastUserId = $row['userId'];
-            $newUserId = sprintf("U%03d", substr($lastUserId, 1) + 1); 
-        } else {
-            $newUserId = 'U001'; 
-        }
+    $userType = 'Manager';
+    $joinTimestamp = date('Y-m-d H:i:s');
 
-        $userType = 'Manager';
-        $joinTimestamp = date('Y-m-d H:i:s');
+    // Directly use the password as it is (no hashing)
+    $sqlInsert = "INSERT INTO user (userId, username, password, userType, jointimestamp)
+                  VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sqlInsert);
+    $stmt->bind_param('sssss', $newUserId, $username, $password, $userType, $joinTimestamp);
 
-        // Using prepared statements for secure data insertion
-        $sqlInsert = "INSERT INTO user (userId, username, password, userType, jointimestamp)
-                      VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sqlInsert);
-        $stmt->bind_param('sssss', $newUserId, $username, $password, $userType, $joinTimestamp);
-
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Manager added successfully.']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Error adding manager: ' . $stmt->error]);
-        }
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Manager added successfully.']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error adding manager: ' . $stmt->error]);
     }
 
     $stmt->close();
