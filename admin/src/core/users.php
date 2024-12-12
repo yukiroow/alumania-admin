@@ -308,40 +308,7 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
                         deleteManagerModal.style.display = "none";
                     });
                 });
-            });
-
-
-
-            document.addEventListener('DOMContentLoaded', () => {
-            const alumniTab = document.getElementById('alumniTab');
-            const managerTab = document.getElementById('managerTab');
-            const userPanel = document.getElementById('userPanel');
-            const addManagerButtonContainer = document.querySelector('.add-manager-button-container');
-            const filterButtonContainer = document.getElementById('filterButtonContainer');
-            const searchInput = document.querySelector('.search-input');
-            function updateTabState(activeTab, inactiveTab, content, showFilter, placeholder) {
-                userPanel.innerHTML = content; 
-                activeTab.classList.add('active'); 
-                inactiveTab.classList.remove('active'); 
-                addManagerButtonContainer.classList.toggle('hidden', showFilter); 
-                filterButtonContainer.style.display = showFilter ? "block" : "none"; 
-                if (searchInput) {
-                    searchInput.placeholder = placeholder; 
-                }
-            }
-
-            updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
-
-            alumniTab.addEventListener('click', () => {
-                updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
-            });
-
-            managerTab.addEventListener('click', () => {
-                updateTabState(managerTab, alumniTab, managerContent, false, "Username");
-            });
-        });
-
-       
+            });    
         </script>
 
         <script src="../js/users.js" defer></script>
