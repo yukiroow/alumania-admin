@@ -46,6 +46,10 @@ function setActiveTab(index) {
                         <img src="../../res/arrow.png" alt="Dropdown Arrow" class="event-dropdown-arrow">
                     </button>
                     <div class="event-dropdown-content" id="categoryDropdown">
+                      <button onclick="
+                        currentEvents = filterEvent(events, 'All')
+                        displayEvents(currentEvents);
+                        ">All</button>
                         <button onclick="
                         currentEvents = filterEvent(events, 'Seminar')
                         displayEvents(currentEvents);
@@ -121,10 +125,17 @@ function setActiveTab(index) {
       break;
   }
 }
+function toggleDropdown(dropdownId) {
+  document.getElementById(dropdownId).classList.toggle("show");
+}
 
 function filterEvent(events, category) {
+  if (category.toLowerCase() === "all") {
+    return events;
+  }
+
   function checkCategory(event) {
-    return event.category.toLowerCase() == category.toLowerCase();
+    return event.category.toLowerCase() === category.toLowerCase();
   }
   return events.filter(checkCategory);
 }
@@ -189,3 +200,16 @@ function eventCategory() {
 function sortCategory() {
   document.getElementById("sortDropdown").classList.toggle("show");
 }
+
+document.addEventListener("click", function (event) {
+  if (
+    !event.target.matches(
+      ".sort-button, .sort-content *, .event-category-button, .event-dropdown-content *"
+    )
+  ) {
+    const sortDropdown = document.getElementById("sortDropdown");
+    const categoryDropdown = document.getElementById("categoryDropdown");
+    sortDropdown.classList.remove("show");
+    categoryDropdown.classList.remove("show");
+  }
+});

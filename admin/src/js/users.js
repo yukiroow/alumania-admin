@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.querySelector(".search-input");
   const totalUsersElement = document.querySelector(".total-users");
   const filterDropdown = document.getElementById("filterDropdown");
+  const filterButton = document.querySelector(".filter-btn");
   const statusFilters = document.querySelectorAll(
     ".filter-section:nth-child(1) ul li"
   );
@@ -15,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function filterRows() {
-    const tableRows = document.querySelectorAll("tbody tr");
     const searchQuery = searchInput.value.toLowerCase();
     let visibleCount = 0;
 
@@ -80,16 +80,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (filterDropdown) {
-    const toggleFilterDropdown = () => {
-      filterDropdown.classList.toggle("show");
-    };
+  const toggleFilterDropdown = () => {
+    filterDropdown.classList.toggle("show");
+  };
 
-    const filterButton = document.querySelector(".filter-btn");
-    if (filterButton) {
-      filterButton.addEventListener("click", toggleFilterDropdown);
-    }
+  if (filterButton) {
+    filterButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent default action
+      toggleFilterDropdown();
+    });
   }
+
+  document.addEventListener("click", (event) => {
+    if (
+      filterDropdown &&
+      !filterDropdown.contains(event.target) &&
+      !filterButton.contains(event.target)
+    ) {
+      filterDropdown.classList.remove("show");
+    }
+  });
 
   const alumniTab = document.getElementById("alumniTab");
   const managerTab = document.getElementById("managerTab");
@@ -121,9 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addManagerButtonContainer.classList.remove("hidden");
     filterDropdown.classList.remove("show");
   });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
   const addManagerButton = document.querySelector(".add-manager-button");
   const modal = document.getElementById("addManagerModal");
   const closeBtn = document.querySelector(".close-btn");
@@ -137,15 +145,25 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.style.display = "none"; // Hide modal
     });
 
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    });
-
     const form = document.getElementById("addManagerForm");
+
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Validate form fields
+      const username = form.elements["username"].value.trim();
+      const password = form.elements["password"].value.trim();
+
+      if (!username || !password) {
+        alert("All fields are required.");
+        return; // Stop the submission if fields are empty
+      }
+
+      if (password.length < 4) {
+        alert("Password must be at least 4 characters long.");
+        return; // Stop the submission if password is too short
+      }
+
       const formData = new FormData(form);
 
       fetch("add_manager.php", {
@@ -159,7 +177,11 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.style.display = "none";
             form.reset();
           } else {
-            alert(data.message || "Failed to add manager.");
+            if (data.message === "User already exists") {
+              alert("A user with this username already exists.");
+            } else {
+              alert(data.message || "Failed to add manager.");
+            }
           }
         })
         .catch((error) => {
@@ -170,9 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.error("Required modal elements not found.");
   }
-});
 
-document.addEventListener("DOMContentLoaded", function () {
   const togglePassword = document.getElementById("togglePassword");
   const password = document.getElementById("password");
 
@@ -182,22 +202,19 @@ document.addEventListener("DOMContentLoaded", function () {
     togglePassword.textContent =
       type === "password" ? "Show Password" : "Hide Password";
   });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const alumniTab = document.getElementById("alumniTab");
-  const managerTab = document.getElementById("managerTab");
-  const userPanel = document.getElementById("userPanel");
+  const togglePassword1 = document.getElementById("togglePassword1");
+  const password1 = document.getElementById("editPassword");
+
+  togglePassword1.addEventListener("click", function () {
+    const type = password1.type === "password" ? "text" : "password";
+    password1.type = type;
+    togglePassword1.textContent =
+      type === "password" ? "Show Password" : "Hide Password";
+  });
+
   const userDetails = document.getElementById("userDetails");
   const userInfo = document.getElementById("userInfo");
-  const goBackButton = document.getElementById("goBackButton");
-  const addManagerButtonContainer = document.querySelector(
-    ".add-manager-button-container"
-  );
-  const filterButtonContainer = document.getElementById(
-    "filterButtonContainer"
-  );
-  const searchInput = document.querySelector(".search-input");
 
   const updateTabState = (
     activeTab,
@@ -210,7 +227,6 @@ document.addEventListener("DOMContentLoaded", () => {
     activeTab.classList.add("active");
     inactiveTab.classList.remove("active");
     addManagerButtonContainer.classList.toggle("hidden", showFilter);
-    filterButtonContainer.style.display = showFilter ? "block" : "none";
     if (searchInput) {
       searchInput.placeholder = placeholder;
     }
@@ -218,20 +234,45 @@ document.addEventListener("DOMContentLoaded", () => {
     userDetails.classList.add("hidden");
   };
 
-  const showUserDetails = (userData) => {
+  // Function to show user details in the modal
+  function showUserDetails(userData) {
     userInfo.innerHTML = `
-      <h2>${userData.name}</h2>
-      <p><strong>Email:</strong> ${userData.email}</p>
-      <p><strong>Employment Status:</strong> ${userData.empstatus}</p>
-      <p><strong>Location:</strong> ${userData.location}</p>
-    `;
-    userPanel.classList.add("hidden");
-    userDetails.classList.remove("hidden");
-  };
+    <div class="profile-section">
+      <div class="profile-picture">
+        <img src="data:image/jpeg;base64,${userData.displaypic}" alt="${userData.name}'s Display Picture" class="circle-pic" />
+      </div>
+      <div class="profile-details">
+        <h2>${userData.name}</h2>
+        <p><strong>User ID:</strong> ${userData.userid}</p>
+      </div>
+    </div>
 
-  goBackButton.addEventListener("click", () => {
-    userDetails.classList.add("hidden");
-    userPanel.classList.remove("hidden");
+    <div class="details-section">
+      <div class="header-split">
+        <div class="header-image">
+          <img src="../../res/info.png" alt="Alumni Info" />
+        </div>
+        <div class="header-text">
+          <h3>Alumni Information</h3>
+        </div>
+      </div>
+
+      <p><strong>Email:</strong> ${userData.email}</p>
+      <p><strong>Course:</strong> ${userData.course}</p>
+      <p><strong>Status:</strong> ${userData.empstatus}</p>
+      <p><strong>Location:</strong> ${userData.location}</p>
+      <p><strong>Company:</strong> ${userData.company}</p>
+    </div>
+  `;
+
+    // Show the modal
+    const modal = document.getElementById("userModal");
+    modal.classList.remove("hidden");
+  }
+
+  // Close button functionality
+  document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("userModal").classList.add("hidden");
   });
 
   userPanel.addEventListener("click", (event) => {

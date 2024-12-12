@@ -131,6 +131,7 @@ if (isset($_SESSION['username'])) { ?>
                         <img src="../../res/arrow.png" alt="Dropdown Arrow" class="event-dropdown-arrow">
                     </button>
                     <div class="event-dropdown-content" id="categoryDropdown">
+                        <button onclick="eventCategory()">All</button>
                         <button onclick="eventCategory()">Seminar</button>
                         <button onclick="eventCategory()">Thanksgiving</button>
                         <button onclick="eventCategory()">Festival</button>

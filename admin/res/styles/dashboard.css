@@ -47,6 +47,10 @@ body {
     height: 83vh;
     background-color: #CCCCCC;
     margin-left: 1%;
+    width: 1px;
+    height: 83vh;
+    background-color: #CCCCCC;
+    margin-left: 1%;
 }
 
 .total-count-section {
@@ -55,6 +59,7 @@ body {
     justify-content: space-between;
     margin-left: 8px;
     width: 100%;
+    /* padding-top: 20px; */
     /* padding-top: 20px; */
     max-width: 1300px;
     margin: auto;
@@ -73,17 +78,21 @@ body {
 }
 
 .card:nth-child(1) {
+.card:nth-child(1) {
     border-left: 5px solid #0b1975;
 }
 
+.card:nth-child(2) {
 .card:nth-child(2) {
     border-left: 5px solid #0077c8;
 }
 
 .card:nth-child(3) {
+.card:nth-child(3) {
     border-left: 5px solid #0498b6;
 }
 
+.card:nth-child(4) {
 .card:nth-child(4) {
     border-left: 5px solid #00d4ff;
 }
@@ -94,6 +103,8 @@ body {
 
 .card-content {
     display: flex;
+    align-items: flex-start;
+    /* Align items to the top */
     align-items: flex-start;
     /* Align items to the top */
     width: 100%;
@@ -110,6 +121,8 @@ body {
     margin-right: 10px;
     margin-left: 20px;
     /* Add left margin to push the icon slightly to the right */
+    margin-left: 20px;
+    /* Add left margin to push the icon slightly to the right */
 }
 
 .icon-container i {
@@ -119,7 +132,11 @@ body {
 .text-container {
     text-align: left;
     /* Align text to the left */
+    text-align: left;
+    /* Align text to the left */
     flex-grow: 1;
+    padding-left: 10px;
+    /* Add some padding for better spacing */
     padding-left: 10px;
     /* Add some padding for better spacing */
 }
@@ -143,15 +160,22 @@ body {
     top: 20px;
     right: 20px;
     z-index: 1000;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
 .notification {
     background-color: rgb(3, 152, 197);
+    background-color: rgb(3, 152, 197);
     color: white;
     padding: 15px;
     margin: 10px 0;
+    margin: 10px 0;
     border-radius: 5px;
     position: relative;
+    animation: fadeIn 0.5s;
     animation: fadeIn 0.5s;
 }
 
@@ -162,6 +186,7 @@ body {
     cursor: pointer;
     position: absolute;
     right: 10px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -171,9 +196,10 @@ body {
     max-width: 1300px;
     margin: auto;
     padding-top: 10px;
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 
 /* Row containers for alignment */
@@ -181,6 +207,7 @@ body {
 .bottom-row {
     display: flex;
     flex-wrap: wrap;
+    gap: 15px;
     gap: 15px;
     justify-content: space-between;
 }
@@ -208,6 +235,8 @@ body {
     margin-bottom: 15px;
     display: flex;
     align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 /* Table Styling */
@@ -218,6 +247,7 @@ body {
 }
 
 .alumni-table th,
+.managers-table th {
 .managers-table th {
     text-align: center;
     padding: 12px;
@@ -251,6 +281,7 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
 
+
     .row-container,
     .bottom-row {
         flex-direction: column;
@@ -272,6 +303,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
+    /* margin: auto; */
     /* margin: auto; */
     font-family: Arial, sans-serif;
 }
@@ -352,6 +384,7 @@ body {
 
 .alumni-card-footer {
     display: flex;
+    align-items: center;
     align-items: center;
 }
 

@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $eventDate = date('Y-m-d', strtotime($schedule));
     $eventTime = date('H:i:s', strtotime($schedule));
-    $userId = '7777'; 
+    $userId = $_SESSION['userid']; 
 
     if (isset($_FILES['eventPhoto']) && $_FILES['eventPhoto']['error'] == UPLOAD_ERR_OK) {
         $imageData = file_get_contents($_FILES['eventPhoto']['tmp_name']);
