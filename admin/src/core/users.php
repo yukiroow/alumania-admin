@@ -160,6 +160,7 @@ if (isset($_SESSION['username'])) {
                 </div>
             `;
 
+            /** Comment **/
             const managerContent = `
                 <div class="section-title">
                     <table>

@@ -383,4 +383,100 @@ tbody tr:hover {
 
 #goBackButton:hover {
   background-color: #0056b3;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
 }
+
+.delete-manager-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-manager-btn:hover {
+  background-color: #e53935;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+#userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Centers both vertically and horizontally */
+  height: 350px; /* Adjust height as needed */
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: justify;
+}
+
+.circle-pic {
+  width: 150px; /* Adjust size as needed */
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  margin-bottom: 40px; /* Space between sections */
+}
+
+.profile-picture {
+  margin-right: 20px; /* Space between picture and details */
+}
+
+.profile-details h2 {
+  margin: 0;
+}
+
+.details-section h3 {
+  margin-bottom: 10px;
+}
+
+.details-section {
+  padding: 20px;
+  margin-bottom: 20px; /* Space between sections */
+}
+
+.details-section h3 {
+  margin-bottom: 15px; /* Space between heading and content */
+  color: #333;
+}
+
+.details-section p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.details-section p strong {
+  color: #000000; /* Accent color for labels */
+}
+
+.details-section img {
+  width: 40px;
+  height: auto;
+  margin-right: 15px;
+}
+
+.header-split {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.header-image img {
+  width: 30px;
+  height: auto;
+}
+
+.header-text h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+/** Comment **/
