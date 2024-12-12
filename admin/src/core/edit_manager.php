@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['username'])) {
     http_response_code(403);
-    echo json_encode(["success" => false, "message" => "Unauthorized access"]);
+    echo json_encode("Unauthorized access");
     exit;
 }
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     if (empty($currentUsername) || empty($newUsername) || empty($password)) {
-        echo json_encode(["success" => false, "message" => "All fields are required."]);
+        echo json_encode("All fields are required.");
         exit;
     }
 
@@ -27,14 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("sss", $newUsername, $password, $currentUsername);
 
     if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Manager updated successfully."]);
+        echo json_encode("Manager updated successfully.");
     } else {
-        echo json_encode(["success" => false, "message" => "Failed to update manager."]);
+        echo json_encode("Failed to update manager.");
     }
 
     $stmt->close();
 } else {
     http_response_code(405);
-    echo json_encode(["success" => false, "message" => "Invalid request method"]);
+    echo json_encode(["Invalid request method"]);
 }
 ?>

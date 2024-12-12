@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     if (empty($username) || empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'Both username and password are required.']);
+        echo json_encode('Both username and password are required.');
         exit;
     }
 
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        echo json_encode(['success' => false, 'message' => 'A user with this username already exists.']);
+        echo json_encode('A user with this username already exists.');
     } else {
         // Proceed with adding the manager
         $sqlGetMaxId = "SELECT userId FROM user ORDER BY userId DESC LIMIT 1;";
@@ -45,15 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('sssss', $newUserId, $username, $password, $userType, $joinTimestamp);
 
         if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Manager added successfully.']);
+            echo json_encode('Manager added successfully.');
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error adding manager: ' . $stmt->error]);
+            echo json_encode('Error adding manager: ' . $stmt->error);
         }
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    echo json_encode('Invalid request method.');
 }
 ?>

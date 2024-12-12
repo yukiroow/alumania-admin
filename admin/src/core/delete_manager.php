@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['username'])) {
     http_response_code(403);
-    echo json_encode(["success" => false, "message" => "Unauthorized access"]);
+    echo json_encode("Unauthorized access");
     exit;
 }
 
@@ -21,16 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt) {
         $stmt->bind_param("s", $managerUsername);  // Bind parameter as string
         if ($stmt->execute()) {
-            echo json_encode(["success" => true, "message" => "Manager deleted successfully"]);
+            echo json_encode("Manager deleted successfully");
         } else {
-            echo json_encode(["success" => false, "message" => "Failed to delete manager"]);
+            echo json_encode("Failed to delete manager");
         }
         $stmt->close();
     } else {
-        echo json_encode(["success" => false, "message" => "Database error"]);
+        echo json_encode("Database error");
     }
 } else {
     http_response_code(405);
-    echo json_encode(["success" => false, "message" => "Invalid request method"]);
+    echo json_encode(["Invalid request method"]);
 }
 ?>
