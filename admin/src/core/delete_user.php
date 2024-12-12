@@ -14,9 +14,8 @@ $conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_POST['userId'];
-    echo "User ID: $userId";  // Debugging to see the input
 
-    $sql = "DELETE FROM alumni WHERE userid = ?";
+    $sql = "DELETE FROM user WHERE userid = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -34,4 +33,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo "Invalid request method";
 }
-?>
