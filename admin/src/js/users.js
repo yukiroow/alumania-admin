@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       filterDropdown.classList.remove("show");
     }
-  }
+  });
 
   // Tab click events
   alumniTab.addEventListener("click", () => {
@@ -290,7 +290,8 @@ function showUserDetails(userData) {
       </div>
 
       <p><strong>Email:</strong> ${userData.email}</p>
-      <p><strong>Employment Status:</strong> ${userData.empstatus}</p>
+      <p><strong>Course:</strong> ${userData.course}</p>
+      <p><strong>Status:</strong> ${userData.empstatus}</p>
       <p><strong>Location:</strong> ${userData.location}</p>
       <p><strong>Company:</strong> ${userData.company}</p>
     </div>
