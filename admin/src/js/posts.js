@@ -29,94 +29,99 @@ function setActiveTab(index) {
       tab.children.item(0).src = "../../res/experience-posts-white.png";
       break;
     case 1:
+    case 1:
       document.getElementById("searchContainer").innerHTML = `
-                <div class="event-search-bar">
-                <input type="text" class="event-search-input" placeholder="Search" id="event-search-text">
-                <button class="event-search-button" onclick="
-                        currentEvents = searchEvent(currentEvents);
-                        displayEvents(currentEvents);
-                ">
-                    <img src="../../res/search.png" alt="Search">
-                </button>
-                </div>
-
-                <div class="event-category-dropdown">
-                    <button class="event-category-button" onclick="eventCategory()">
-                        Category
-                        <img src="../../res/arrow.png" alt="Dropdown Arrow" class="event-dropdown-arrow">
-                    </button>
-                    <div class="event-dropdown-content" id="categoryDropdown">
+                  <div class="event-search-bar">
+                  <input type="text" class="event-search-input" placeholder="Search" id="event-search-text">
+                  <button class="event-search-button" onclick="
+                          currentEvents = searchEvent(currentEvents);
+                          displayEvents(currentEvents);
+                  ">
+                      <img src="../../res/search.png" alt="Search">
+                  </button>
+                  </div>
+  
+                  <div class="event-category-dropdown">
+                      <button class="event-category-button" onclick="eventCategory()">
+                          Category
+                          <img src="../../res/arrow.png" alt="Dropdown Arrow" class="event-dropdown-arrow">
+                      </button>
+                      <div class="event-dropdown-content" id="categoryDropdown">
                         <button onclick="
-                        currentEvents = filterEvent(events, 'Seminar')
-                        displayEvents(currentEvents);
-                        ">Seminar</button>
-                        <button onclick="
-                        currentEvents = filterEvent(events, 'Thanksgiving')
-                        displayEvents(currentEvents);
-                        ">Thanksgiving</button>
-                        <button onclick="
-                        currentEvents = filterEvent(events, 'Festival')
-                        displayEvents(currentEvents);
-                        ">Festival</button>
-                        <button onclick="
-                        currentEvents = filterEvent(events, 'Reunion')
-                        displayEvents(currentEvents);
-                        ">Reunion</button>
-                    </div>
-                </div>
-                <div class="sort-dropdown">
-                    <button class="sort-button" onclick="
-                        sortCategory();
-                    ">
-                        <img src="../../res/sort.png" alt="Sort">
-                    </button>
-                    <div class="sort-content" id="sortDropdown">
-                        <button onclick="
-                        sortCategory();
-                        sortEventsAsc(currentEvents);
-                        displayEvents(currentEvents);
-                        " class="sort-item">Ascending</button>
-                        <button onclick="
-                        sortCategory();
-                        sortEventsDesc(currentEvents);
-                        displayEvents(currentEvents);
-                        " class="sort-item">Descending</button>
-                    </div>
-                </div>
-            `;
+                          currentEvents = filterEvent(events, 'All')
+                          displayEvents(currentEvents);
+                          ">All</button>
+                          <button onclick="
+                          currentEvents = filterEvent(events, 'Seminar')
+                          displayEvents(currentEvents);
+                          ">Seminar</button>
+                          <button onclick="
+                          currentEvents = filterEvent(events, 'Thanksgiving')
+                          displayEvents(currentEvents);
+                          ">Thanksgiving</button>
+                          <button onclick="
+                          currentEvents = filterEvent(events, 'Festival')
+                          displayEvents(currentEvents);
+                          ">Festival</button>
+                          <button onclick="
+                          currentEvents = filterEvent(events, 'Reunion')
+                          displayEvents(currentEvents);
+                          ">Reunion</button>
+                      </div>
+                  </div>
+                  <div class="sort-dropdown">
+                      <button class="sort-button" onclick="
+                          sortCategory();
+                      ">
+                          <img src="../../res/sort.png" alt="Sort">
+                      </button>
+                      <div class="sort-content" id="sortDropdown">
+                          <button onclick="
+                          sortCategory();
+                          sortEventsAsc(currentEvents);
+                          displayEvents(currentEvents);
+                          " class="sort-item">Ascending</button>
+                          <button onclick="
+                          sortCategory();
+                          sortEventsDesc(currentEvents);
+                          displayEvents(currentEvents);
+                          " class="sort-item">Descending</button>
+                      </div>
+                  </div>
+              `;
       tab.children.item(0).src = "../../res/calendar-posts-white.png";
       break;
     case 2:
       document.getElementById("searchContainer").innerHTML = `
-                <div class="job-search-bar">
-                <input type="text" class="job-search-input" placeholder="Search" id="job-search-text">
-                <button class="job-search-button" onclick="
-                    currentJobs = searchJobs(jobs);
-                    displayJobs(currentJobs);
-                ">
-                    <img src="../../res/search.png" alt="Search">
-                </button>
-                </div>
-                <div class="sort-dropdown">
-                    <button class="sort-button" onclick="
-                        sortCategory();
-                    ">
-                        <img src="../../res/sort.png" alt="Sort">
-                    </button>
-                    <div class="sort-content" id="sortDropdown">
-                        <button onclick="
-                        sortCategory();
-                        sortJobsAsc(currentJobs);
-                        displayJobs(currentJobs);
-                        " class="sort-item">Ascending</button>
-                        <button onclick="
-                        sortCategory();
-                        sortJobsDesc(currentJobs);
-                        displayJobs(currentJobs);
-                        " class="sort-item">Descending</button>
-                    </div>
-                </div>
-            `;
+                  <div class="job-search-bar">
+                  <input type="text" class="job-search-input" placeholder="Search" id="job-search-text">
+                  <button class="job-search-button" onclick="
+                      currentJobs = searchJobs(jobs);
+                      displayJobs(currentJobs);
+                  ">
+                      <img src="../../res/search.png" alt="Search">
+                  </button>
+                  </div>
+                  <div class="sort-dropdown">
+                      <button class="sort-button" onclick="
+                          sortCategory();
+                      ">
+                          <img src="../../res/sort.png" alt="Sort">
+                      </button>
+                      <div class="sort-content" id="sortDropdown">
+                          <button onclick="
+                          sortCategory();
+                          sortJobsAsc(currentJobs);
+                          displayJobs(currentJobs);
+                          " class="sort-item">Ascending</button>
+                          <button onclick="
+                          sortCategory();
+                          sortJobsDesc(currentJobs);
+                          displayJobs(currentJobs);
+                          " class="sort-item">Descending</button>
+                      </div>
+                  </div>
+              `;
       tab.children.item(0).src = "../../res/jlisting-posts-white.png";
       break;
   }
