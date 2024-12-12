@@ -133,11 +133,25 @@ if (isset($_SESSION['username']) && $_SESSION['role'] == 'Admin') {
         </div>
 
         <div id="userModal" class="modal">
-  <div class="modal-content">
-    <button id="closeModal" class="close-btn">&times;</button>
-    <div id="userInfo"></div>
-  </div>
-</div>
+            <div class="modal-content">
+                <button id="closeModal" class="close-btn">&times;</button>
+                <div id="userInfo"></div>
+                <div class="modal-actions">
+                <button id="deleteUserBtn" class="delete-btn">Delete User</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <p>Are you sure you want to delete this user?</p>
+                <div class="modal-actions">
+                <button id="confirmDelete" class="confirm-btn">Yes</button>
+                <button id="cancelDelete" class="cancel-btn">No</button>
+                </div>
+            </div>
+        </div>
+
 
 
         <script>

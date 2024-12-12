@@ -291,7 +291,6 @@ tbody tr:hover {
   align-items: center; /* Center vertically */
 }
 
-
 .modal-content {
   background-color: #fff;
   margin: auto;
@@ -363,7 +362,6 @@ tbody tr:hover {
 .close-btn:hover {
   color: #333;
 }
-
 
 /* Form Styling */
 .modal form label {
@@ -525,14 +523,14 @@ button {
 #userInfo {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
-  justify-content: flex-start; 
-  height: auto; 
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: auto;
   width: 80%;
   padding: 10px;
-  text-align: left; 
-  gap: 10px; 
-  box-sizing: border-box; 
+  text-align: left;
+  gap: 10px;
+  box-sizing: border-box;
 }
 /* here */
 .circle-pic {
@@ -547,7 +545,7 @@ button {
   align-items: flex-start; /* Align items to the top-left */
   padding-top: 20px;
   gap: 5px;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 /* here */
 .profile-picture {
@@ -666,4 +664,39 @@ button {
   .header-text h3 {
     font-size: 1rem; /* Smaller heading size */
   }
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.confirm-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.cancel-btn {
+  background-color: #007bff;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#confirmationModal .modal-actions {
+  display: flex;
+  padding-top: 20px;
+  justify-content: center;
 }

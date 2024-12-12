@@ -267,72 +267,126 @@ const updateTabState = (
 };
 
 // Function to show user details in the modal
-function showUserDetails(userData) {
-  const userInfo = document.getElementById("userInfo");
-  userInfo.innerHTML = `
-    <div class="profile-section">
-      <div class="profile-picture">
-        <img src="data:image/jpeg;base64,${userData.displaypic}" alt="${userData.name}'s Display Picture" class="circle-pic" />
-      </div>
-      <div class="profile-details">
-        <h2>${userData.name}</h2>
-        <p><strong>User ID:</strong> ${userData.userid}</p>
-      </div>
-    </div>
+document.addEventListener("DOMContentLoaded", () => {
+  let pendingUserId = null; // Store the user ID temporarily
 
-    <div class="details-section">
-  <div class="header-split">
-    <div class="header-image">
-      <img src="../../res/info.png" alt="Alumni Info" />
-    </div>
-    <div class="header-text">
-      <h3>Alumni Information</h3>
-    </div>
-  </div>
+  function showUserDetails(userData) {
+    const userInfo = document.getElementById("userInfo");
+    userInfo.dataset.userid = userData.userid; // Attach user ID
 
-  <table class="details-table">
-    <tr>
-      <th>Email</th>
-      <td>${userData.email}</td>
-    </tr>
-    <tr>
-      <th>Course</th>
-      <td>${userData.course}</td>
-    </tr>
-    <tr>
-      <th>Status</th>
-      <td>${userData.empstatus}</td>
-    </tr>
-    <tr>
-      <th>Location</th>
-      <td>${userData.location}</td>
-    </tr>
-    <tr>
-      <th>Company</th>
-      <td>${userData.company}</td>
-    </tr>
-  </table>
-</div>
+    userInfo.innerHTML = `
+          <div class="profile-section">
+              <div class="profile-picture">
+                  <img src="data:image/jpeg;base64,${userData.displaypic}" alt="${userData.name}'s Display Picture" class="circle-pic" />
+              </div>
+              <div class="profile-details">
+                  <h2>${userData.name}</h2>
+                  <p><strong>User ID:</strong> ${userData.userid}</p>
+              </div>
+          </div>
 
-  `;
+          <div class="details-section">
+              <div class="header-split">
+                  <div class="header-image">
+                      <img src="../../res/info.png" alt="Alumni Info" />
+                  </div>
+                  <div class="header-text">
+                      <h3>Alumni Information</h3>
+                  </div>
+              </div>
 
-  // Show the modal
-  const modal = document.getElementById("userModal");
-  modal.style.display = "flex";
-}
+              <table class="details-table">
+                  <tr><th>Email</th><td>${userData.email}</td></tr>
+                  <tr><th>Course</th><td>${userData.course}</td></tr>
+                  <tr><th>Status</th><td>${userData.empstatus}</td></tr>
+                  <tr><th>Location</th><td>${userData.location}</td></tr>
+                  <tr><th>Company</th><td>${userData.company}</td></tr>
+              </table>
+          </div>
+      `;
 
-// Close button functionality
-document.getElementById("closeModal").addEventListener("click", () => {
-  const modal = document.getElementById("userModal");
-  modal.style.display = "none";
-});
-
-// Event listener for user panel
-const userPanel = document.getElementById("userPanel");
-userPanel.addEventListener("click", (event) => {
-  const row = event.target.closest("tr");
-  if (row && row.dataset.userData) {
-    const userData = JSON.parse(row.dataset.userData);
-    showUserDetails(userData);
+    const modal = document.getElementById("userModal");
+    modal.style.display = "flex";
   }
+
+  function closeModal() {
+    document.getElementById("userModal").style.display = "none";
+    document.getElementById("confirmationModal").style.display = "none";
+  }
+
+  function showConfirmationModal(userId) {
+    pendingUserId = userId;
+    const confirmationModal = document.getElementById("confirmationModal");
+    confirmationModal.style.display = "flex";
+  }
+
+  function deleteUser(userId) {
+    fetch("delete_user.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        userId: userId,
+      }).toString(),
+    })
+      .then((response) => response.text()) // Read response as text
+      .then((data) => {
+        console.log(data);
+        if (data.trim() === "Alumni deleted successfully") {
+          // Use trim() to remove whitespace
+          closeModal();
+          removeUserFromTable(userId);
+          location.reload();
+        } else {
+          alert(`Failed to delete alumni: ${data}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while deleting the alumni.");
+      });
+  }
+
+  function removeUserFromTable(userId) {
+    const rows = document.querySelectorAll("#userPanel tr");
+    rows.forEach((row) => {
+      const rowData = row.dataset.userData;
+      if (rowData) {
+        const parsedData = JSON.parse(rowData);
+        if (parsedData.userid === userId) {
+          row.remove();
+        }
+      }
+    });
+  }
+
+  // Event Listeners
+  document.getElementById("closeModal").addEventListener("click", closeModal);
+
+  document.getElementById("deleteUserBtn").addEventListener("click", () => {
+    const userInfo = document.getElementById("userInfo");
+    const userId = userInfo.dataset.userid;
+    showConfirmationModal(userId);
+  });
+
+  document.getElementById("confirmDelete").addEventListener("click", () => {
+    if (pendingUserId) {
+      deleteUser(pendingUserId);
+      pendingUserId = null;
+    }
+  });
+
+  document.getElementById("cancelDelete").addEventListener("click", () => {
+    pendingUserId = null;
+    closeModal();
+  });
+
+  document.getElementById("userPanel").addEventListener("click", (event) => {
+    const row = event.target.closest("tr");
+    if (row && row.dataset.userData) {
+      const userData = JSON.parse(row.dataset.userData);
+      showUserDetails(userData);
+    }
+  });
 });
