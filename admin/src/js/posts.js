@@ -127,9 +127,17 @@ function setActiveTab(index) {
   }
 }
 
+function toggleDropdown(dropdownId) {
+  document.getElementById(dropdownId).classList.toggle("show");
+}
+
 function filterEvent(events, category) {
+  if (category.toLowerCase() === "all") {
+    return events;
+  }
+
   function checkCategory(event) {
-    return event.category.toLowerCase() == category.toLowerCase();
+    return event.category.toLowerCase() === category.toLowerCase();
   }
   return events.filter(checkCategory);
 }
