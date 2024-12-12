@@ -190,70 +190,94 @@ if (isset($_SESSION['username'])) {
                 </div>
             `;
 
-
             document.addEventListener('DOMContentLoaded', () => {
-                const alumniTab = document.getElementById('alumniTab');
-                const managerTab = document.getElementById('managerTab');
-                const userPanel = document.getElementById('userPanel');
-                const addManagerButtonContainer = document.querySelector('.add-manager-button-container');
-                const filterButtonContainer = document.getElementById('filterButtonContainer');
-                const searchInput = document.querySelector('.search-input');
+                // Variables for modals
+                const editManagerModal = document.getElementById("editManagerModal");
+                const deleteManagerModal = document.getElementById("deleteManagerModal");
+                const editManagerForm = document.getElementById("editManagerForm");
+                const deleteManagerConfirmBtn = document.getElementById("confirmDeleteManager");
 
-                function updateTabState(activeTab, inactiveTab, content, showFilter, placeholder) {
-                    userPanel.innerHTML = content;
-                    activeTab.classList.add('active');
-                    inactiveTab.classList.remove('active');
-                    addManagerButtonContainer.classList.toggle('hidden', showFilter);
-                    filterButtonContainer.style.display = showFilter ? "block" : "none";
-                    if (searchInput) {
-                        searchInput.placeholder = placeholder;
+                let currentManagerUsername = null;
+
+                window.openEditModal = function (managerData) {
+                    document.getElementById("editUsername").value = managerData.username;
+                    document.getElementById("editPassword").value = managerData.password;
+                    currentManagerUsername = managerData.username; // Displayed for confirmation
+                    editManagerModal.style.display = "block";
+                };
+
+                editManagerForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    // Validate form fields
+                    const username = editManagerForm.elements["username"].value.trim();
+                    const password = editManagerForm.elements["password"].value.trim();
+
+                    if (!username || !password) {
+                        alert("All fields are required.");
                     }
-                }
 
-                updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
+                    if (password.length < 4) {
+                        alert("Password must be at least 4 characters long.");
+                        return;
+                    }
 
-                alumniTab.addEventListener('click', () => {
-                    updateTabState(alumniTab, managerTab, alumniContent, true, "Name, ID, Email");
+                    const formData = new FormData(editManagerForm);
+                    formData.append("currentUsername", currentManagerUsername); 
+
+                    fetch("edit_manager.php", {
+                        method: "POST",
+                        body: formData,
+                    })
+                    .then((response) => response.text())
+                    .then((data) => {
+                        alert(data);  
+                        location.reload();
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred while updating the manager.");
+                    });
+
+                    editManagerModal.style.display = "none"; 
                 });
 
-                managerTab.addEventListener('click', () => {
-                    updateTabState(managerTab, alumniTab, managerContent, false, "Username");
+
+                window.openDeleteModal = function (username) {
+                    currentManagerUsername = username;
+                    document.getElementById("deleteManagerName").textContent = username;
+                    deleteManagerModal.style.display = "block";
+                };
+
+                deleteManagerConfirmBtn.addEventListener("click", () => {
+                    fetch("delete_manager.php", {
+                        method: "POST",
+                        body: new URLSearchParams({
+                            username: currentManagerUsername
+                        }),
+                    })
+                        .then((response) => response.text())
+                        .then((data) => {
+                            alert(data);  // Assuming the server returns a success message
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("An error occurred while deleting the manager.");
+                        });
+
+                    deleteManagerModal.style.display = "none";
                 });
-            });
 
-            function showUserDetails(userData) {
-                userInfo.innerHTML = `
-            <h2>User Details</h2>
-            <p><strong>ID:</strong> ${userData.id}</p>
-            <p><strong>Name:</strong> ${userData.name}</p>
-            <p><strong>Email:</strong> ${userData.email}</p>
-            <p><strong>Status:</strong> ${userData.status}</p>
-            <p><strong>Location:</strong> ${userData.location}</p>
-        `;
 
-                userPanel.classList.add("hidden");
-                userDetails.classList.remove("hidden");
-            }
-
-            goBackButton.addEventListener("click", () => {
-                userDetails.classList.add("hidden");
-                userPanel.classList.remove("hidden");
-            });
-
-            document.querySelector("tbody").addEventListener("click", (event) => {
-                const row = event.target.closest("tr");
-                if (row) {
-                    const userData = {
-                        id: row.cells[0].textContent,
-                        email: row.cells[1].textContent,
-                        name: row.cells[2].textContent,
-                        status: row.cells[3].textContent,
-                        location: row.cells[4].textContent,
-                    };
-
-                    showUserDetails(userData);
-                }
-            });
+                // Close modals
+                document.querySelectorAll(".close-btn").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        editManagerModal.style.display = "none";
+                        deleteManagerModal.style.display = "none";
+                    });
+                });
+            });     
         </script>
 
         <script src="../js/users.js" defer></script>
