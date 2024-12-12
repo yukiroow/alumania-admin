@@ -426,13 +426,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    display: none; /* Hide overlay initially */
-    opacity: 0; 
+    display: block; /* Hide overlay initially */
+    opacity: 1; 
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.overlay.active {
-    display: block;
-    opacity: 1;
-}
 
